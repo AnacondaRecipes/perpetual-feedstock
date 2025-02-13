@@ -8,6 +8,8 @@ package:
 source:
   url: https://pypi.org/packages/source/{{ name[0] }}/{{ name }}/perpetual-{{ version }}.tar.gz
   sha256: b08ab576712b5535fa49fe39e26cff17814bd426f518d9dd24a2f80b82b6177f
+  patches:
+    - remove-feature-annotations.patch
 
 build:
   skip: true  # [py<39]
@@ -18,7 +20,6 @@ build:
 
 requirements:
   build:
-    - {{ stdlib('c') }}
     - {{ compiler('c') }}
     - {{ compiler('rust') }}
     - cargo-bundle-licenses
@@ -32,12 +33,30 @@ requirements:
     - typing_extensions
 
 test:
+  source_files:
+    - scripts
+    - python-package
+    - resources
   imports:
     - perpetual
   commands:
     - pip check
+    - python scripts/make_resources.py
+    - chmod +x scripts/run-python-tests.sh  # [not win]
+    - scripts/run-python-tests.sh  # [not win]
+    - scripts/run-python-tests.ps1  # [win]
   requires:
     - pip
+    - pytest
+    - {{ compiler('rust') }}
+    - cargo-bundle-licenses
+    - maturin
+    - pandas
+    - black
+    - sklearn-compat
+    - polars
+    - seaborn
+    - pyarrow
 
 about:
   home: https://perpetual-ml.com

@@ -13,6 +13,7 @@ source:
 
 build:
   skip: true  # [py<39]
+  skip: true  # [win or s390x]  # no 'polars' package on them
   script:
     - cargo-bundle-licenses --format yaml --output THIRDPARTY.yml
     - {{ PYTHON }} -m pip install . -vv --no-deps --no-build-isolation

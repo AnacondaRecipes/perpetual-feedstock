@@ -66,11 +66,16 @@ about:
   dev_url: https://github.com/perpetual-ml/perpetual
   doc_url: https://perpetual-ml.github.io/perpetual/
   summary: A self-generalizing gradient boosting machine which doesn't need hyperparameter optimization
-  license: AGPL-3.0-only
+  license: GPL-3.0
+  license_family: GPL
   license_file:
     - LICENSE
     - python-package/LICENSE
     - THIRDPARTY.yml
+  description: |
+    PerpetualBooster is a gradient boosting machine (GBM) algorithm which doesn't need hyperparameter optimization
+    unlike other GBM algorithms. Similar to AutoML libraries, it has a budget parameter. Increasing the budget parameter
+    increases the predictive power of the algorithm and gives better results on unseen data.
 
 extra:
   recipe-maintainers:

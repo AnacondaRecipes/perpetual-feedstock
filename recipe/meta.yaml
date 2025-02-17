@@ -13,7 +13,6 @@ source:
 
 build:
   skip: true  # [py<39]
-  skip: true  # [win or s390x]  # no 'polars' package on them
   script:
     - cargo-bundle-licenses --format yaml --output THIRDPARTY.yml
     - {{ PYTHON }} -m pip install . -vv --no-deps --no-build-isolation
@@ -24,6 +23,8 @@ requirements:
     - {{ compiler('c') }}
     - {{ compiler('rust') }}
     - cargo-bundle-licenses
+    - patch    # [unix]
+    - m2-patch # [win]
   host:
     - python
     - maturin >=1.0.0,<1.7.0
@@ -38,6 +39,8 @@ test:
     - scripts
     - python-package
     - resources
+  files:
+    - pytest.ini  # to exclude polars test, which is available not on all platforms
   imports:
     - perpetual
   commands:
@@ -55,7 +58,6 @@ test:
     - pandas
     - black
     - sklearn-compat
-    - polars
     - seaborn
     - pyarrow
 

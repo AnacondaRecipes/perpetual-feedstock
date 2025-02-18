@@ -45,10 +45,10 @@ test:
     - perpetual
   commands:
     - pip check
-    # - python scripts/make_resources.py
-    # - chmod +x scripts/run-python-tests.sh  # [not win]
-    # - scripts/run-python-tests.sh  # [not win]
-    # - scripts/run-python-tests.ps1  # [win]
+    - python scripts/make_resources.py
+    - chmod +x scripts/run-python-tests.sh  # [not win]
+    - scripts/run-python-tests.sh  # [not win]
+    - scripts/run-python-tests.ps1  # [win]
   requires:
     - pip
     - pytest

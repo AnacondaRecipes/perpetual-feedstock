@@ -42,7 +42,7 @@ test:
     - python-package
     - resources
   files:
-    - pytest.ini  # [win or s390x]  # to exclude polars test
+    - pytest.ini  # [win or s390x or py>=313]  # to exclude polars test
   imports:
     - perpetual
   commands:
@@ -62,7 +62,7 @@ test:
     - sklearn-compat
     - seaborn
     - pyarrow
-    - polars  # [not (win or s390x)]
+    - polars  # [not (win or s390x or py>=313)]
 
 about:
   home: https://perpetual-ml.com

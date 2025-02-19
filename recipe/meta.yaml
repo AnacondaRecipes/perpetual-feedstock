@@ -73,8 +73,6 @@ about:
   license_family: GPL
   license_file:
     - LICENSE
-    - python-package/LICENSE
-    - THIRDPARTY.yml
   description: |
     PerpetualBooster is a gradient boosting machine (GBM) algorithm which doesn't need hyperparameter optimization
     unlike other GBM algorithms. Similar to AutoML libraries, it has a budget parameter. Increasing the budget parameter

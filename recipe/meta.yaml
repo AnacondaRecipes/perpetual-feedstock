@@ -58,7 +58,6 @@ test:
     - cargo-bundle-licenses
     - maturin
     - pandas
-    - black
     - sklearn-compat
     - seaborn
     - pyarrow

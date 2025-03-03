@@ -6,11 +6,15 @@ package:
   version: {{ version }}
 
 source:
-  url: https://pypi.org/packages/source/{{ name[0] }}/{{ name }}/perpetual-{{ version }}.tar.gz
+  url: https://pypi.org/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz
   sha256: b08ab576712b5535fa49fe39e26cff17814bd426f518d9dd24a2f80b82b6177f
+  patches:
+    - 01-remove-feature-annotations.patch
 
 build:
   skip: true  # [py<39]
+  missing_dso_whitelist:  # [s390x]
+    - '$RPATH/ld64.so.1'  # [s390x]
   script:
     - cargo-bundle-licenses --format yaml --output THIRDPARTY.yml
     - {{ PYTHON }} -m pip install . -vv --no-deps --no-build-isolation
@@ -18,10 +22,11 @@ build:
 
 requirements:
   build:
-    - {{ stdlib('c') }}
     - {{ compiler('c') }}
     - {{ compiler('rust') }}
     - cargo-bundle-licenses
+    - patch    # [unix]
+    - m2-patch # [win]
   host:
     - python
     - maturin >=1.0.0,<1.7.0
@@ -32,23 +37,42 @@ requirements:
     - typing_extensions
 
 test:
+  source_files:
+    - scripts/make_resources.py
+    - python-package/tests
+    - resources
   imports:
     - perpetual
   commands:
     - pip check
+    - python scripts/make_resources.py
+    - cd python-package
+    - pytest -vv tests -k "not test_polars"  # [win or s390x or py>=313]
+    - pytest -vv tests  # [not (win or s390x or py>=313)]
   requires:
     - pip
+    - pytest
+    - pandas
+    - sklearn-compat
+    # seaborn used in scripts/make_resources.py
+    - seaborn
+    # pa.array requires 'pyarrow' module to be installed
+    # when using polars
+    - pyarrow  # [not (win or s390x or py>=313)]
+    - polars  # [not (win or s390x or py>=313)]
 
 about:
   home: https://perpetual-ml.com
   dev_url: https://github.com/perpetual-ml/perpetual
   doc_url: https://perpetual-ml.github.io/perpetual/
   summary: A self-generalizing gradient boosting machine which doesn't need hyperparameter optimization
-  license: AGPL-3.0-only
-  license_file:
-    - LICENSE
-    - python-package/LICENSE
-    - THIRDPARTY.yml
+  license: GPL-3.0-or-later
+  license_family: GPL
+  license_file: LICENSE
+  description: |
+    PerpetualBooster is a gradient boosting machine (GBM) algorithm which doesn't need hyperparameter optimization
+    unlike other GBM algorithms. Similar to AutoML libraries, it has a budget parameter. Increasing the budget parameter
+    increases the predictive power of the algorithm and gives better results on unseen data.
 
 extra:
   recipe-maintainers:

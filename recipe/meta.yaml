@@ -38,28 +38,27 @@ requirements:
 
 test:
   source_files:
-    - scripts
-    - python-package
+    - scripts/make_resources.py
+    - python-package/tests
     - resources
-  files:
-    - pytest.ini  # [win or s390x or py>=313]  # to exclude polars test
   imports:
     - perpetual
   commands:
     - pip check
     - python scripts/make_resources.py
-    - sh scripts/run-python-tests.sh  # [not win]
-    - scripts\run-python-tests.ps1  # [win]
+    - cd python-package
+    - pytest -vv tests -k "not test_polars"  # [win or s390x or py>=313]
+    - pytest -vv tests  # [not (win or s390x or py>=313)]
   requires:
     - pip
     - pytest
-    - {{ compiler('rust') }}
-    - cargo-bundle-licenses
-    - maturin
     - pandas
     - sklearn-compat
+    # seaborn used in scripts/make_resources.py
     - seaborn
-    - pyarrow
+    # pa.array requires 'pyarrow' module to be installed
+    # when using polars
+    - pyarrow  # [not (win or s390x or py>=313)]
     - polars  # [not (win or s390x or py>=313)]
 
 about:

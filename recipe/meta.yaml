@@ -18,15 +18,14 @@ build:
   script:
     - cargo-bundle-licenses --format yaml --output THIRDPARTY.yml
     - {{ PYTHON }} -m pip install . -vv --no-deps --no-build-isolation
-  number: 0
+  number: 1
 
 requirements:
   build:
+    - {{ stdlib('c') }}
     - {{ compiler('c') }}
     - {{ compiler('rust') }}
     - cargo-bundle-licenses
-    - patch    # [unix]
-    - m2-patch # [win]
   host:
     - python
     - maturin >=1.0.0,<1.7.0
